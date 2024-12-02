@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      background-color: black;     
+    }
+    h1 {
+      color: white;
+    }
+    .pokemon {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      background-image: url("https://i.pinimg.com/originals/69/68/1e/69681ef4639fa37d34c05f824a597cb3.jpg");
+      background-repeat: contain;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pokémon</h1>
+  <div id="pokemon-container"></div>
+  <script>
+      async function buscarPokemon() {
+      const container = document.getElementById("pokemon-container");
+      try {
+      const resposta = await fetch("https://pokeapi.co/api/v2/pokemon?limit=10");
+      if (!resposta.ok) throw new Error ("Erro na requisição!");
+
+        const dados = await resposta.json();
+        const listaPokemon = dados.results;
+
+        listaPokemon.forEach(async (pokemon) => {
+          const detalhesPokemon = await fetch(pokemon.url);
+          const dadosPokemon = await detalhesPokemon.json();
+
+          const div = document.createElement("div");
+          div.classList.add("pokemon");
+
+          let html = `<h2>${dadosPokemon.name.toUpperCase()}</h2>`;
+          html += `<p><strong>ID:</strong> ${dadosPokemon.id}</p>`;
+          html += `<p><strong>Altura:</strong> ${dadosPokemon.height}</p>`;
+
+          const tipos = [];
+          for (const tipo of dadosPokemon.types) {
+            tipos.push(tipo.type.name);
+          }
+          const tiposFormatados = tipos.join(", ");
+          html += `<p><strong>Tipos:</strong> ${tiposFormatados}</p>`;
+
+          html += `<h3>Atributos Base:</h3>`;
+          for (let atributo of dadosPokemon.stats) {
+            html += `<p>${atributo.stat.name.toUpperCase()}: ${atributo.base_stat}</p>`;
+          }
+
+          div.innerHTML = html;
+          container.appendChild(div);
+        });
+      } catch (erro) {
+        console.error("Erro ao buscar Pokemon: ", erro);
+        container.innerHTML = `<p>Erro ao carregar dados.</p>`;
+      }
+    }
+
+    buscarPokemon();
+    </script>
+</body>
+</html>
