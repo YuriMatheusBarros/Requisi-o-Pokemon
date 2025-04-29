@@ -34,3 +34,10 @@ JavaScript (ES6+)
 Fetch API para requisições assíncronas
 
 PokeAPI como fonte de dados
+
+- Como Utilizar:
+Abra o arquivo index.html no navegador
+
+A aplicação fará automaticamente a requisição à API
+
+Visualize os cards com informações dos Pokémon
